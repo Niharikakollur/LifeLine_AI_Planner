@@ -1,0 +1,165 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "User Profile",
+      "description": "The user's setup containing their occupational category and daily schedule preferences.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique identifier of the user (e.g., anonymous or authenticated ID)."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["Student", "Employee", "Other"],
+          "description": "The user's role."
+        },
+        "dailyFreeHours": {
+          "type": "number",
+          "description": "Number of free hours available daily."
+        },
+        "wakeUpTime": {
+          "type": "string",
+          "description": "User wake up time (HH:MM)."
+        },
+        "sleepTime": {
+          "type": "string",
+          "description": "User sleep time (HH:MM)."
+        },
+        "currentStartTime": {
+          "type": "string",
+          "description": "User's current work starting time today (e.g. 6:30 PM)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when this profile was created."
+        }
+      },
+      "required": ["userId", "role", "dailyFreeHours", "wakeUpTime", "sleepTime"]
+    },
+    "task": {
+      "title": "Task",
+      "description": "An individual productivity or entertainment task created by the user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The task ID."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The user who owns this task."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the task."
+        },
+        "deadline": {
+          "type": "string",
+          "description": "The deadline date and time."
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["Easy", "Medium", "Hard"],
+          "description": "The difficulty level."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["Study", "Work", "Project", "Assignment", "Health", "Entertainment"],
+          "description": "The category of the task."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "userId", "name", "deadline", "difficulty", "type"]
+    },
+    "schedule": {
+      "title": "Schedule",
+      "description": "The generated schedule outputted by the Gemini AI.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique schedule ID."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The user who owns this schedule."
+        },
+        "tasks": {
+          "type": "array",
+          "description": "Snapshot of tasks that this schedule was created for."
+        },
+        "timeBlocks": {
+          "type": "array",
+          "description": "List of recommended time blocks."
+        },
+        "recommendations": {
+          "type": "array",
+          "description": "List of productivity recommendations."
+        },
+        "explanation": {
+          "type": "string",
+          "description": "Explainability text on why the schedule was structured this way."
+        },
+        "feedback": {
+          "type": "string",
+          "enum": ["pending", "accepted", "rescheduled"],
+          "description": "Feedback status of the schedule."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "userId", "tasks", "timeBlocks", "recommendations", "explanation", "feedback", "createdAt"]
+    },
+    "coachMessage": {
+      "title": "Coach Message",
+      "description": "An individual chat message in the coaching thread.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique message ID."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "assistant"],
+          "description": "The sender of the message."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text content of the message."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the message was sent."
+        }
+      },
+      "required": ["id", "role", "text", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/userProfiles/{userId}": {
+      "schema": "userProfile",
+      "description": "Stores user demographic and hour settings."
+    },
+    "/userProfiles/{userId}/tasks/{taskId}": {
+      "schema": "task",
+      "description": "Subcollection storing tasks for each user."
+    },
+    "/userProfiles/{userId}/schedules/{scheduleId}": {
+      "schema": "schedule",
+      "description": "Subcollection storing generated schedules and feedback loops."
+    },
+    "/userProfiles/{userId}/coachMessages/{messageId}": {
+      "schema": "coachMessage",
+      "description": "Subcollection storing coaching messages for each user."
+    }
+  }
+}

@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id != null && id.size() > 0 && id.size() < 128;
+    }
+
+    match /userProfiles/{userId} {
+      allow read, write: if isValidId(userId);
+
+      match /tasks/{taskId} {
+        allow get, write: if isValidId(userId) && isValidId(taskId);
+        allow list: if isValidId(userId);
+      }
+
+      match /schedules/{scheduleId} {
+        allow get, write: if isValidId(userId) && isValidId(scheduleId);
+        allow list: if isValidId(userId);
+      }
+
+      match /coachMessages/{messageId} {
+        allow get, write: if isValidId(userId) && isValidId(messageId);
+        allow list: if isValidId(userId);
+      }
+    }
+  }
+}

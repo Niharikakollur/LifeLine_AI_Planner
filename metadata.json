@@ -1,0 +1,6 @@
+{
+  "name": "Lifeline AI Planner",
+  "description": "An AI productivity assistant that helps users complete important work before missing deadlines, with personalized schedules, balanced breaks, and real-time explanation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
